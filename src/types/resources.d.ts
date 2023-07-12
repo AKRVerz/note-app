@@ -1,0 +1,58 @@
+import { ModelStructure } from '../../../my-roses-backend/src/repository/prisma-repo';
+import { RESOURCE_NAME, USER_ROLE } from 'src/utils/constant';
+
+type UserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];
+type ResourceName = (typeof RESOURCE_NAME)[keyof typeof RESOURCE_NAME];
+
+export type ResourceStructure = {
+  [RESOURCE_NAME.USERS]: ModelStructure['user'];
+  [RESOURCE_NAME.NOTES]: ModelStructure['note'];
+};
+
+export type ResourceRecord<T extends ResourceName> = {
+  rows: {
+    [id: number]: ResourceStructure[T];
+  };
+  count: number;
+};
+
+export type Resources = {
+  [RESOURCE_NAME.USERS]: ResourceRecord<typeof RESOURCE_NAME.USERS>;
+  [RESOURCE_NAME.NOTES]: ResourceRecord<typeof RESOURCE_NAME.NOTES>;
+};
+
+export type Create = {
+  [RESOURCE_NAME.USERS]: Omit<
+    ModelStructure['user'],
+    'id' | 'createdAt' | 'updatedAt'
+  >;
+  [RESOURCE_NAME.NOTES]: Omit<
+    ModelStructure['pembukuan'],
+    'id' | 'createdAt' | 'updatedAt'
+  >;
+};
+
+export type Update = {
+  [RESOURCE_NAME.USERS]: Partial<
+    Omit<
+      Koperasi.Resource.ResourceStructure[typeof RESOURCE_NAME.USERS],
+      'id' | 'createdAt' | 'updatedAt'
+    >
+  >;
+  [RESOURCE_NAME.NOTES]: Partial<
+    Omit<
+      Koperasi.Resource.ResourceStructure[typeof RESOURCE_NAME.NOTES],
+      'id' | 'createdAt' | 'updatedAt'
+    >
+  >;
+};
+
+export type UpdatePassword = {
+  password: string;
+  confirmationPassword: string;
+  oldPassword: string;
+};
+
+export type ReactSetter<T> = React.Dispatch<React.SetStateAction<T>>;
+
+export as namespace Resource;
